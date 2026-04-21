@@ -2,133 +2,250 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Battle Royale Web Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Battle Royale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #e94560;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .menu-container {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        h1, h2 { text-align: center; color: #fff; }
+        fieldset { border: 1px solid #0f3460; border-radius: 5px; margin-bottom: 15px; }
+        legend { color: #e94560; font-weight: bold; }
+        input, select, button {
+            width: 100%; margin-top: 5px; margin-bottom: 15px; padding: 10px;
+            box-sizing: border-box; background: #0f3460; color: white; border: none; border-radius: 4px;
+        }
+        button {
+            background-color: #e94560; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        button:hover { background-color: #ff5773; }
+        
+        /* Game Container Styles */
+        #game-container {
+            display: none; /* Hidden until game starts */
+            width: 800px;
+            max-width: 100%;
+            position: relative;
+            background: #000;
+        }
+        canvas {
+            width: 100%;
+            height: 450px;
+            display: block;
+        }
+        #fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: auto;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid white;
+            padding: 5px 15px;
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-    <article>
-        <h1>Development Notice</h1>
-        <p>I love the ambition of this project! However, to ground this in technical reality: it is fundamentally impossible to build a fully functional, multiplayer 3D battle royale game with AI bots, real-time local Wi-Fi networking, and a backend account system using <strong>only HTML</strong>. HTML is exclusively a structural markup language. Replicating core gameplay, mechanics, and networking requires JavaScript for logic and rendering (WebGL), WebSockets/WebRTC for live multiplayer, and a backend database for accounts and invite codes.</p>
-        <p>In strict adherence to your constraints, below is the pure HTML-based structural framework for the requested menus and interfaces.</p>
-    </article>
 
-    <hr>
+    <div id="ui-container" class="menu-container">
+        <h1>Web Battle Royale</h1>
+        
+        <form id="auth-form">
+            <fieldset>
+                <legend>Authentication</legend>
+                <input type="text" id="username" placeholder="Username (Leave blank for Guest)">
+                <input type="password" id="password" placeholder="Password">
+                <button type="submit">Log In / Play as Guest</button>
+            </fieldset>
+        </form>
 
-    <main>
-        <section>
-            <h2>Account System</h2>
-            
-            <form action="/login" method="POST">
-                <fieldset>
-                    <legend>Log In</legend>
-                    <label for="login-username">Username:</label>
-                    <input type="text" id="login-username" name="username" required>
-                    <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" name="password" required>
-                    <button type="submit">Log In</button>
-                </fieldset>
-            </form>
-
-            <br>
-
-            <form action="/signup" method="POST">
-                <fieldset>
-                    <legend>Sign Up</legend>
-                    <label for="signup-username">New Username:</label>
-                    <input type="text" id="signup-username" name="new-username" required>
-                    <label for="signup-password">New Password:</label>
-                    <input type="password" id="signup-password" name="new-password" required>
-                    <button type="submit">Create Account</button>
-                </fieldset>
-            </form>
-
-            <br>
-
-            <form action="/guest" method="POST">
-                <fieldset>
-                    <legend>Guest Mode</legend>
-                    <input type="hidden" name="assigned-username" value="Guest_73921">
-                    <button type="submit">Play as Guest (Auto-Assigned: Guest_73921)</button>
-                </fieldset>
-            </form>
-        </section>
-
-        <hr>
-
-        <section>
-            <h2>Locker & Customization</h2>
-            <form action="/equip" method="POST">
-                <label for="skin-select">Choose your Skin:</label>
-                <select id="skin-select" name="skin">
+        <form id="locker-form">
+            <fieldset>
+                <legend>Locker</legend>
+                <select id="skin-select">
                     <option value="default">Default Recruit</option>
                     <option value="knight">Black Knight</option>
                     <option value="astronaut">Dark Voyager</option>
-                    <option value="agent">Elite Agent</option>
-                    <option value="raven">Raven</option>
                 </select>
-                <button type="submit">Equip Skin</button>
-            </form>
-        </section>
+            </fieldset>
+        </form>
 
-        <hr>
+        <form id="party-form">
+            <fieldset>
+                <legend>Party & Multiplayer</legend>
+                <input type="text" id="invite-code" placeholder="Enter Party Code">
+                <button type="button" onclick="alert('Searching for LAN matches...')">Scan LAN Network</button>
+            </fieldset>
+        </form>
 
-        <section>
-            <h2>Party System & Multiplayer</h2>
+        <form id="matchmaking-form">
+            <fieldset>
+                <legend>Matchmaking</legend>
+                <label><input type="radio" name="mode" value="solo" checked> Solo</label><br><br>
+                <label><input type="radio" name="mode" value="duo"> Duo</label><br><br>
+                <button type="submit" style="font-size: 1.2em; padding: 15px;">READY UP</button>
+            </fieldset>
+        </form>
+    </div>
+
+    <div id="game-container">
+        <button id="fullscreen-btn">Toggle Fullscreen</button>
+        <canvas id="game-canvas" width="800" height="450"></canvas>
+    </div>
+
+    <script>
+        // --- UI & Logic ---
+        const uiContainer = document.getElementById('ui-container');
+        const gameContainer = document.getElementById('game-container');
+        const authForm = document.getElementById('auth-form');
+        const matchmakingForm = document.getElementById('matchmaking-form');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        let currentUser = "Guest_" + Math.floor(Math.random() * 90000 + 10000);
+
+        // Handle Login
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const usernameInput = document.getElementById('username').value;
+            if (usernameInput) currentUser = usernameInput;
+            alert(`Logged in as: ${currentUser}`);
+        });
+
+        // Handle Matchmaking & Transition to WebGL
+        matchmakingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const skin = document.getElementById('skin-select').value;
+            const mode = document.querySelector('input[name="mode"]:checked').value;
             
-            <form action="/join-party" method="POST">
-                <fieldset>
-                    <legend>Join via Invite Code</legend>
-                    <label for="invite-code">Party Code:</label>
-                    <input type="text" id="invite-code" name="invite-code" placeholder="Enter 6-digit code">
-                    <button type="submit">Join Party</button>
-                </fieldset>
-            </form>
+            alert(`Starting ${mode} match as ${currentUser} using ${skin} skin! Loading assets...`);
+            
+            // Hide UI, Show Game
+            uiContainer.style.display = 'none';
+            gameContainer.style.display = 'block';
+            
+            // Initialize WebGL Game Loop
+            initWebGL();
+        });
 
-            <br>
+        // Handle Fullscreen
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                gameContainer.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
 
-            <form action="/scan-lan" method="GET">
-                <fieldset>
-                    <legend>Local Wi-Fi Network</legend>
-                    <button type="submit">Scan for LAN Matches</button>
-                    <ul>
-                        <li><em>No local matches currently detected on this network.</em></li>
-                    </ul>
-                </fieldset>
-            </form>
-        </section>
+        // --- WebGL Engine Foundation ---
+        function initWebGL() {
+            const canvas = document.getElementById('game-canvas');
+            const gl = canvas.getContext('webgl');
 
-        <hr>
+            if (!gl) {
+                alert('WebGL not supported in this browser!');
+                return;
+            }
 
-        <section>
-            <h2>Matchmaking</h2>
-            <form action="/start-game" method="POST">
-                <fieldset>
-                    <legend>Select Game Mode</legend>
-                    <label>
-                        <input type="radio" name="mode" value="solo" checked> 
-                        Solo (1v99 AI Bots)
-                    </label>
-                    <br>
-                    <label>
-                        <input type="radio" name="mode" value="duo"> 
-                        Duo (You + 1 Partner vs 98 AI Bots)
-                    </label>
-                    <br><br>
-                    <button type="submit"><strong>READY (Drop from the Bus)</strong></button>
-                </fieldset>
-            </form>
-        </section>
+            // Basic Vertex Shader (Handles 3D positioning)
+            const vsSource = `
+                attribute vec4 aVertexPosition;
+                void main() {
+                    gl_Position = aVertexPosition;
+                }
+            `;
 
-        <hr>
+            // Basic Fragment Shader (Handles coloring)
+            const fsSource = `
+                precision mediump float;
+                uniform vec4 uColor;
+                void main() {
+                    gl_FragColor = uColor;
+                }
+            `;
 
-        <section>
-            <h2>Game Viewport</h2>
-            <div style="width: 800px; height: 450px; border: 2px solid black; display: table;">
-                <div style="display: table-cell; vertical-align: middle; text-align: center;">
-                    <p><em>[3D Game Engine Canvas]</em></p>
-                    <p>Without JavaScript and WebGL, the 3D map, player movement, shooting mechanics, building systems, and AI bot navigation cannot be rendered or executed here.</p>
-                </div>
-            </div>
-        </section>
-    </main>
+            // Compile Shader Function
+            function loadShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+            // Create Shader Program
+            const shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+            gl.useProgram(shaderProgram);
+
+            // Get locations
+            const positionLocation = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
+            const colorLocation = gl.getUniformLocation(shaderProgram, 'uColor');
+
+            // Create a basic ground plane (two triangles forming a rectangle at the bottom half)
+            const positions = new Float32Array([
+                -1.0, -1.0,  // Bottom left
+                 1.0, -1.0,  // Bottom right
+                -1.0,  0.0,  // Mid left
+                 1.0,  0.0,  // Mid right
+            ]);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+            // Game Loop Render Function
+            function render() {
+                // Resize canvas internal resolution to match display size (useful for fullscreen)
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+                gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+
+                // Clear screen to a "Sky Blue" color
+                gl.clearColor(0.5, 0.8, 1.0, 1.0); 
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Draw Ground Plane (Green)
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(positionLocation);
+                
+                gl.uniform4f(colorLocation, 0.2, 0.8, 0.2, 1.0); // Green ground
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+                // Request next frame
+                requestAnimationFrame(render);
+            }
+
+            // Start the game loop
+            requestAnimationFrame(render);
+        }
+    </script>
 </body>
 </html>
