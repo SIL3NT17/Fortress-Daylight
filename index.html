@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Battle Royale Web Interface</title>
+</head>
+<body>
+    <article>
+        <h1>Development Notice</h1>
+        <p>I love the ambition of this project! However, to ground this in technical reality: it is fundamentally impossible to build a fully functional, multiplayer 3D battle royale game with AI bots, real-time local Wi-Fi networking, and a backend account system using <strong>only HTML</strong>. HTML is exclusively a structural markup language. Replicating core gameplay, mechanics, and networking requires JavaScript for logic and rendering (WebGL), WebSockets/WebRTC for live multiplayer, and a backend database for accounts and invite codes.</p>
+        <p>In strict adherence to your constraints, below is the pure HTML-based structural framework for the requested menus and interfaces.</p>
+    </article>
+
+    <hr>
+
+    <main>
+        <section>
+            <h2>Account System</h2>
+            
+            <form action="/login" method="POST">
+                <fieldset>
+                    <legend>Log In</legend>
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" name="username" required>
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" name="password" required>
+                    <button type="submit">Log In</button>
+                </fieldset>
+            </form>
+
+            <br>
+
+            <form action="/signup" method="POST">
+                <fieldset>
+                    <legend>Sign Up</legend>
+                    <label for="signup-username">New Username:</label>
+                    <input type="text" id="signup-username" name="new-username" required>
+                    <label for="signup-password">New Password:</label>
+                    <input type="password" id="signup-password" name="new-password" required>
+                    <button type="submit">Create Account</button>
+                </fieldset>
+            </form>
+
+            <br>
+
+            <form action="/guest" method="POST">
+                <fieldset>
+                    <legend>Guest Mode</legend>
+                    <input type="hidden" name="assigned-username" value="Guest_73921">
+                    <button type="submit">Play as Guest (Auto-Assigned: Guest_73921)</button>
+                </fieldset>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Locker & Customization</h2>
+            <form action="/equip" method="POST">
+                <label for="skin-select">Choose your Skin:</label>
+                <select id="skin-select" name="skin">
+                    <option value="default">Default Recruit</option>
+                    <option value="knight">Black Knight</option>
+                    <option value="astronaut">Dark Voyager</option>
+                    <option value="agent">Elite Agent</option>
+                    <option value="raven">Raven</option>
+                </select>
+                <button type="submit">Equip Skin</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Party System & Multiplayer</h2>
+            
+            <form action="/join-party" method="POST">
+                <fieldset>
+                    <legend>Join via Invite Code</legend>
+                    <label for="invite-code">Party Code:</label>
+                    <input type="text" id="invite-code" name="invite-code" placeholder="Enter 6-digit code">
+                    <button type="submit">Join Party</button>
+                </fieldset>
+            </form>
+
+            <br>
+
+            <form action="/scan-lan" method="GET">
+                <fieldset>
+                    <legend>Local Wi-Fi Network</legend>
+                    <button type="submit">Scan for LAN Matches</button>
+                    <ul>
+                        <li><em>No local matches currently detected on this network.</em></li>
+                    </ul>
+                </fieldset>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Matchmaking</h2>
+            <form action="/start-game" method="POST">
+                <fieldset>
+                    <legend>Select Game Mode</legend>
+                    <label>
+                        <input type="radio" name="mode" value="solo" checked> 
+                        Solo (1v99 AI Bots)
+                    </label>
+                    <br>
+                    <label>
+                        <input type="radio" name="mode" value="duo"> 
+                        Duo (You + 1 Partner vs 98 AI Bots)
+                    </label>
+                    <br><br>
+                    <button type="submit"><strong>READY (Drop from the Bus)</strong></button>
+                </fieldset>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Game Viewport</h2>
+            <div style="width: 800px; height: 450px; border: 2px solid black; display: table;">
+                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                    <p><em>[3D Game Engine Canvas]</em></p>
+                    <p>Without JavaScript and WebGL, the 3D map, player movement, shooting mechanics, building systems, and AI bot navigation cannot be rendered or executed here.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
